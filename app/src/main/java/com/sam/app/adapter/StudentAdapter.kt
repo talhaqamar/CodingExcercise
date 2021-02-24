@@ -22,6 +22,7 @@ class StudentAdapter(var context: Activity, userArrayList: ArrayList<Student>) :
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val user: Student = userArrayList[position]
         val viewHolder = holder as RecyclerViewViewHolder
+        viewHolder.id_student.setText(user.id.toString())
         viewHolder.name_student.setText(user.name)
         viewHolder.program_student.setText(user.degree_program)
     }
