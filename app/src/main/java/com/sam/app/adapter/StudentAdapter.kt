@@ -23,7 +23,7 @@ class StudentAdapter(var context: Activity, userArrayList: ArrayList<Student>) :
         val user: Student = userArrayList[position]
         val viewHolder = holder as RecyclerViewViewHolder
         viewHolder.name_student.setText(user.name)
-        viewHolder.program_student.setText(user.degree_progam)
+        viewHolder.program_student.setText(user.degree_program)
     }
 
     override fun getItemCount(): Int {

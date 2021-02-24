@@ -2,8 +2,10 @@ package com.sam.app.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.sam.app.data.JSONData
 import com.sam.app.model.Student
 import java.util.*
+import java.util.stream.IntStream
 
 
 class StudentViewModel : ViewModel() {
@@ -15,16 +17,21 @@ class StudentViewModel : ViewModel() {
     }
 
     fun populateList() {
-        val user = Student()
-        user.name = "Talha "
-        user.degree_progam = "Cloud Computing"
+        val user: Student?  // = Student()
+//        user.name = "Talha "
+//        user.degree_program = "Cloud Computing"
         userArrayList = ArrayList()
-        userArrayList!!.add(user)
-        userArrayList!!.add(user)
-        userArrayList!!.add(user)
-        userArrayList!!.add(user)
-        userArrayList!!.add(user)
-        userArrayList!!.add(user)
+//        userArrayList!!.add(user)
+//        userArrayList!!.add(user)
+//        userArrayList!!.add(user)
+//        userArrayList!!.add(user)
+//        userArrayList!!.add(user)
+//        userArrayList!!.add(user)
+//       userArrayList =
+         userArrayList = JSONData.parseJSON()
+
+
+
     }
 
     init {
