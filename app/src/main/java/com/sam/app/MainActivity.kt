@@ -2,6 +2,7 @@ package com.sam.app
 
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.*
 import androidx.lifecycle.Observer
@@ -25,11 +26,21 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
         recyclerView = findViewById(R.id.rv_main)
         viewModel = ViewModelProviders.of(context!!).get(StudentViewModel::class.java)
         viewModel!!.getUserMutableLiveData()?.observe(context!!, userListUpdateObserver)
+
+
     }
 
     var userListUpdateObserver: Observer<ArrayList<Student>?> = Observer<ArrayList<Student>?> { userArrayList ->
         recyclerViewAdapter = StudentAdapter(context!!, userArrayList)
         recyclerView!!.layoutManager = LinearLayoutManager(context)
         recyclerView!!.adapter = recyclerViewAdapter
+        recyclerView!!.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                if (!recyclerView.canScrollVertically(1)) { //1 for down
+                    Toast.makeText(this@MainActivity, "Scroll To bottom",Toast.LENGTH_LONG).show()
+                }
+            }
+        })
     }
 }
