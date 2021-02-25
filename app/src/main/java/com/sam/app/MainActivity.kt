@@ -2,6 +2,7 @@ package com.sam.app
 
 
 import android.os.Bundle
+import android.widget.AbsListView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.*
@@ -19,28 +20,79 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
     var viewModel: StudentViewModel? = null
     var recyclerView: RecyclerView? = null
     var recyclerViewAdapter: StudentAdapter? = null
+    var pastVisiblesItems:Int = 0
+    var visibleItemCount:Int = 0
+    var totalItemCount:Int = 0
+    var mLayoutManager: LinearLayoutManager? = null
+    var isScrolling = false
+
+    var loading = true
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         context = this
         recyclerView = findViewById(R.id.rv_main)
+
         viewModel = ViewModelProviders.of(context!!).get(StudentViewModel::class.java)
         viewModel!!.getUserMutableLiveData()?.observe(context!!, userListUpdateObserver)
 
+        mLayoutManager = LinearLayoutManager(this);
+//        recyclerView!!.setLayoutManager(mLayoutManager);
 
-    }
-
-    var userListUpdateObserver: Observer<ArrayList<Student>?> = Observer<ArrayList<Student>?> { userArrayList ->
-        recyclerViewAdapter = StudentAdapter(context!!, userArrayList)
-        recyclerView!!.layoutManager = LinearLayoutManager(context)
-        recyclerView!!.adapter = recyclerViewAdapter
         recyclerView!!.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
+                    isScrolling = true
+                }
+            }
+
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                if (!recyclerView.canScrollVertically(1)) { //1 for down
-                    Toast.makeText(this@MainActivity, "Scroll To bottom",Toast.LENGTH_LONG).show()
+                visibleItemCount = recyclerView.layoutManager!!.getChildCount()
+                totalItemCount = recyclerView.layoutManager!!.getItemCount()
+                pastVisiblesItems = (recyclerView.layoutManager as LinearLayoutManager?)!!.findFirstVisibleItemPosition()
+
+//                Toast.makeText(this@MainActivity, "Scrolling" + viewModel!!.studentArrayList!!.size , Toast.LENGTH_SHORT).show()
+
+                if (isScrolling && (visibleItemCount + pastVisiblesItems == totalItemCount)) {
+                    isScrolling = false
+                    viewModel!!.populateList()
+                    recyclerViewAdapter!!.notifyDataSetChanged()
+                    Toast.makeText(this@MainActivity, "" + viewModel!!.studentArrayList!!.size, Toast.LENGTH_SHORT).show()
                 }
             }
         })
+
+//        recyclerView!!.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+//            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+//                if (dy > 0) { //check for scroll down
+//                    visibleItemCount = mLayoutManager!!.getChildCount()
+//                    totalItemCount = mLayoutManager!!.getItemCount()
+//                    pastVisiblesItems = mLayoutManager!!.findFirstVisibleItemPosition()
+//                    if (loading) {
+//                        if (visibleItemCount + pastVisiblesItems >= totalItemCount) {
+//                            loading = false
+//                            Toast.makeText(this@MainActivity, "Scroll To bottom", Toast.LENGTH_LONG).show()
+//                            viewModel!!.populateList()
+//                            // Do pagination.. i.e. fetch new data
+//                            loading = true
+//                        }
+//                    }
+//                }
+//            }
+//        })
+
+    }
+
+    var userListUpdateObserver: Observer<ArrayList<Student>?> = Observer<ArrayList<Student>?> { studentArrayList ->
+        recyclerViewAdapter = StudentAdapter(context!!, studentArrayList)
+        recyclerView!!.layoutManager = LinearLayoutManager(context)
+        recyclerView!!.adapter = recyclerViewAdapter
+        recyclerView!!.setLayoutManager(recyclerView!!.layoutManager);
+
+
+
+//
     }
 }
