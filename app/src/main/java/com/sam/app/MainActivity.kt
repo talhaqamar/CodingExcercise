@@ -53,7 +53,10 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
                 totalItemCount = recyclerView.layoutManager!!.getItemCount()
                 pastVisiblesItems = (recyclerView.layoutManager as LinearLayoutManager?)!!.findFirstVisibleItemPosition()
 
-                Toast.makeText(this@MainActivity, "Display Items: " + viewModel!!.studentArrayList!!.size + "\nTotal Items: " + viewModel!!.allRecordsArrayList!!.size, Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@MainActivity, "Display Items: " +
+                        recyclerView.adapter!!.itemCount // Just making sure it has correct number of items
+//                        viewModel!!.studentArrayList!!.size
+                        + "\nTotal Items: " + viewModel!!.allRecordsArrayList!!.size, Toast.LENGTH_SHORT).show()
 
                 if (isScrolling && (visibleItemCount + pastVisiblesItems == totalItemCount)) {
                     isScrolling = false
