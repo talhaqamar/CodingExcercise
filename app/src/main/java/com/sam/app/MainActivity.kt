@@ -16,6 +16,7 @@ import java.util.*
 
 
 class MainActivity : AppCompatActivity(), LifecycleOwner {
+
     var context: MainActivity? = null
     var viewModel: StudentViewModel? = null
     var recyclerView: RecyclerView? = null
@@ -26,7 +27,6 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
     var mLayoutManager: LinearLayoutManager? = null
     var isScrolling = false
 
-    var loading = true
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -53,35 +53,15 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
                 totalItemCount = recyclerView.layoutManager!!.getItemCount()
                 pastVisiblesItems = (recyclerView.layoutManager as LinearLayoutManager?)!!.findFirstVisibleItemPosition()
 
-//                Toast.makeText(this@MainActivity, "Scrolling" + viewModel!!.studentArrayList!!.size , Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@MainActivity, "Display Items: " + viewModel!!.studentArrayList!!.size + "\nTotal Items: " + viewModel!!.allRecordsArrayList!!.size, Toast.LENGTH_SHORT).show()
 
                 if (isScrolling && (visibleItemCount + pastVisiblesItems == totalItemCount)) {
                     isScrolling = false
                     viewModel!!.populateList()
                     recyclerViewAdapter!!.notifyDataSetChanged()
-                    Toast.makeText(this@MainActivity, "" + viewModel!!.studentArrayList!!.size, Toast.LENGTH_SHORT).show()
                 }
             }
         })
-
-//        recyclerView!!.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-//            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-//                if (dy > 0) { //check for scroll down
-//                    visibleItemCount = mLayoutManager!!.getChildCount()
-//                    totalItemCount = mLayoutManager!!.getItemCount()
-//                    pastVisiblesItems = mLayoutManager!!.findFirstVisibleItemPosition()
-//                    if (loading) {
-//                        if (visibleItemCount + pastVisiblesItems >= totalItemCount) {
-//                            loading = false
-//                            Toast.makeText(this@MainActivity, "Scroll To bottom", Toast.LENGTH_LONG).show()
-//                            viewModel!!.populateList()
-//                            // Do pagination.. i.e. fetch new data
-//                            loading = true
-//                        }
-//                    }
-//                }
-//            }
-//        })
 
     }
 
@@ -90,9 +70,5 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
         recyclerView!!.layoutManager = LinearLayoutManager(context)
         recyclerView!!.adapter = recyclerViewAdapter
         recyclerView!!.setLayoutManager(recyclerView!!.layoutManager);
-
-
-
-//
     }
 }

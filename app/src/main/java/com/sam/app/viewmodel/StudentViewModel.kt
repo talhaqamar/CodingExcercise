@@ -23,50 +23,17 @@ class StudentViewModel : ViewModel() {
     }
 
     fun populateList() {
-//        val user: Student?  // = Student()
-//        user.name = "Talha "
-//        user.degree_program = "Cloud Computing"
-
-
-
-//        for (i in calculateRecords(studentArrayList!!)) {
-//            if (checkFiveRecords < 5) {
-//                if (studentArrayList!!.size >= 0 && studentArrayList!!.size <= 5 && allRecordsArrayList!!.size >= studentArrayList!!.size) {
-//                    checkFiveRecords++
-//                    studentArrayList!!.add(i)
-//                } else if (studentArrayList!!.size >= 5 && allRecordsArrayList!!.size >= studentArrayList!!.size) {
-//                    checkFiveRecords++
-//                    studentArrayList!!.add(i)
-//                }
-//            } else {
-//                checkFiveRecords = 0
-//                break
-//            }
-//
-           var studentArray: ArrayList<Student> = calculateRecords(studentArrayList)
-//
-//
-//        }
+         calculateRecords(studentArrayList)
     }
 
-    private fun calculateRecords(student: ArrayList<Student>?): ArrayList<Student> {
-        var list :ArrayList<Student> = ArrayList()
-        checkFiveRecords = 0;
-
-
-         allRecordsArrayList!!.drop(student!!.size).forEach ForEach@{
-
-            if (checkFiveRecords < 5 && list.size<=5) {
+    private fun calculateRecords(student: ArrayList<Student>?){
+        allRecordsArrayList!!.drop(student!!.size).forEach ForEach@{
+            if (checkFiveRecords < 5 && student.size <= allRecordsArrayList!!.size) {
                 checkFiveRecords++
                 studentArrayList!!.add(it)
-                list.add(it)
             } else return@ForEach
-
-
         }
-
         checkFiveRecords = 0
-        return  list
     }
 
     init {
